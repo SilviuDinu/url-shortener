@@ -1,0 +1,31 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Short Urls</title>
+</head>
+
+<body>
+    <h1>Short Urls</h1>
+    <main id="app">
+        <div class="wrap">
+            <form @submit.prevent="createUrl()">
+                <label for="url">Add an Url</label>
+                <input v-model="url" type="text" name="url">
+                <br>
+                <label for="slug">Choose a custom slug</label>
+                <input v-model="slug" type="text" name="slug">
+                <br>
+                <button type="submit">Shorten</button>
+            </form>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js"
+        integrity="sha512-ZjkdNWvVA3C4ZhiL2HoYnUVHB0cLCJwQl/YU5IXgmVSGSsLhpBg5rAIiltBeEpjjNcmxb2F4nePSh1O91J0FCg=="
+        crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

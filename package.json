@@ -1,0 +1,37 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.1.1",
+    "helmet-csp": "^3.1.0",
+    "monk": "^7.3.2",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.1.12",
+    "nodemon": "^2.0.5",
+    "vue": "^2.6.12",
+    "yup": "^0.29.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilviuDinu/url-shortener.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SilviuDinu/url-shortener/issues"
+  },
+  "homepage": "https://github.com/SilviuDinu/url-shortener#readme"
+}
