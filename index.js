@@ -37,14 +37,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('./public'));
 
-// app.post('/hash', async (req, res) => {
-//     const { urlHash } = req.body;
-//     const previousUrls = await urls.find({ urlHash });
-//     console.log('req.params', req.params);
-//     if (previousUrls) {
-//         res.send(previousUrls);
-//     }
-// });
+app.post('/hash', async (req, res) => {
+    try {
+        const { urlHash } = req.body;
+        const previousUrls = await urls.find({ urlHash });
+        console.log('req.params', req.params);
+        if (previousUrls) {
+            res.send(previousUrls);
+        }
+    }
+     catch (error) {
+        res.redirect('/?error=Link-not-found');
+    }
+});
 
 app.get('/:id', async (req, res) => {
     const { id: slug } = req.params;

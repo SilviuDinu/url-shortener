@@ -10,8 +10,8 @@ var app = new Vue({
     methods: {
         async createUrl() {
             var requestBody = { url: this.url, slug: this.slug };
-            if(requestBody.slug === '') delete requestBody.slug;
-            if(!localStorage.getItem('url_hash')) {
+            if (requestBody.slug === '') delete requestBody.slug;
+            if (!localStorage.getItem('url_hash')) {
                 localStorage.setItem('url_hash', Math.random().toString(36).substring(7));
             }
             requestBody.urlHash = localStorage.getItem('url_hash');
@@ -21,19 +21,26 @@ var app = new Vue({
                 body: JSON.stringify(requestBody)
             });
             this.created = await response.json();
-            // this.getPreviousUrls();
+            this.getPreviousUrls();
             this.newUrl = window.location.href + this.created.slug;
         },
-        // async getPreviousUrls() {
-        //     var response = await fetch('/hash', {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify({ urlHash: localStorage.getItem('url_hash') })
-        //     });
-        //     this.previousUrls.push(await response.json());
-        // }
+        async getPreviousUrls() {
+            var response = await fetch('/hash', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ urlHash: localStorage.getItem('url_hash') })
+            });
+            this.previousUrls.push(await response.json());
+        },
+        copyNewUrl() {
+            inputField = document.getElementById("newUrl");
+            console.log(inputField)
+            inputField.select();
+            inputField.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
     },
-    // created () {
-    //     this.getPreviousUrls();
-    // }
+    created() {
+        this.getPreviousUrls();
+    }
 })
