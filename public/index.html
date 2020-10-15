@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Short Urls</title>
+    <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
 </head>
 
 <body>
@@ -20,6 +21,8 @@
                 <br>
                 <button type="submit">Shorten</button>
             </form>
+            <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div> 
+            <!-- <div v-if="previousUrls.length > 0" v-for="url in previousUrls[0]"><a v-bind:href="window.location.href + url.slug">{{ window.location.href + url.slug }}</a> -> {{ url.url }}</div> -->
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js"

@@ -37,28 +37,42 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('./public'));
 
-
-// app.get('/', (req, res) => { 
-//     res.json({
-//         message: 'This works 🍔'
-//     })
+// app.post('/hash', async (req, res) => {
+//     const { urlHash } = req.body;
+//     const previousUrls = await urls.find({ urlHash });
+//     console.log('req.params', req.params);
+//     if (previousUrls) {
+//         res.send(previousUrls);
+//     }
 // });
 
-// app.get('/url/:id', (req, res) => {
-
-//  });
+app.get('/:id', async (req, res) => {
+    const { id: slug } = req.params;
+    try {
+        const url = await urls.findOne({ slug });
+        if (url) {
+            res.redirect(url.url);
+        }
+        res.redirect(`/?error=${slug}-not-found`)
+    }
+    catch (error) {
+        res.redirect('/?error=Link-not-found');
+    }
+});
 
 const schema = yup.object().shape({
     slug: yup.string().trim().matches(/[\w\-]/i),
-    url: yup.string().trim().url().required()
+    url: yup.string().trim().url().required(),
+    urlHash: yup.string().trim()
 });
 
 app.post('/url', async (req, res, next) => {
-    let { slug, url } = req.body;
+    let { slug, url, urlHash } = req.body;
     try {
         await schema.validate({
             slug,
             url,
+            urlHash
         });
         if (!slug) {
             slug = nanoid(4).toLowerCase();
@@ -66,7 +80,8 @@ app.post('/url', async (req, res, next) => {
         const newUrl = {
             url,
             slug,
-        };
+            urlHash,
+        }
         const created = await urls.insert(newUrl);
         res.json(created);
     }
@@ -76,7 +91,7 @@ app.post('/url', async (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-    if(error.status){
+    if (error.status) {
         res.status(error.status);
     } else res.status(500);
     res.json({
