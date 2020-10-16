@@ -4,29 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <title>Short Urls</title>
-    <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
+    <link rel="shortcut icon" type="image/jpg" href="favicon.ico" />
 </head>
 
 <body>
-    <h1>Short Urls</h1>
     <main id="app">
         <div class="wrap">
+            <h1>Short Urls</h1>
             <form @submit.prevent="createUrl()">
-                <label for="url">Please add an URL</label>
-                <input v-model="url" type="text" name="url">
+                <!-- <label for="url">Please add an URL</label> -->
+                <input v-model="url" type="text" name="url" placeholder="Please add an URL">
                 <br>
-                <label for="slug">Choose a custom slug (optional) </label>
-                <input v-model="slug" type="text" name="slug">
+                <!-- <label for="slug">Choose a custom slug (optional) </label> -->
+                <input v-model="slug" type="text" name="slug" placeholder="Choose a custom slug (optional)">
                 <br>
-                <button type="submit">Shorten</button>
+                <button type="submit" class="short">Shorten</button>
             </form>
-            <div class="error" v-if="!ok && error.message"><p>{{ error.message }}</p></div>
+            <div class="error" v-if="!ok && error.message">
+                <p>{{ error.message }}</p>
+            </div>
             <!-- <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div>  -->
             <label v-if="newUrl" for="newUrl">Here is your short URL</label>
-            <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl"/>
-            <button v-if="newUrl" :click="copyUrl(newUrl)">Copy</button>
-            <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0"><a v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a> -> {{ url.url }}</div>
+            <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl" />
+            <button v-if="newUrl" @click="copyUrl(newUrl)" class="copy">{{copyButtonMessage}}</button>
+        </div>
+        <div class="prev-wrapper">
+            <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0" class="prev">
+                <span class="original-url">{{ url.url }}</span>
+                <span class="shortened-url"><a
+                        v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a>
+                </span>
+            </div>
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js"

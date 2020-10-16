@@ -11,7 +11,8 @@ var app = new Vue({
             message: '',
             enabled: this.ok
         },
-        ok: false
+        ok: false,
+        copyButtonMessage: 'Copy',
     },
     methods: {
         async createUrl() {
@@ -28,7 +29,7 @@ var app = new Vue({
                 this.setUrls(await this.created);
                 this.newUrl = window.location.origin + '/' + this.created.slug;
             } else {
-                this.error.message = 'Oops! Either this slug is already in use, or something went wrong.';
+                this.error.message = 'Oops! Either something went wrong, or this slug is already in use 🎯';
                 throw new Error('Could not shorten this URL. Something went wrong.');
             }
         },
@@ -50,6 +51,8 @@ var app = new Vue({
         copyUrl(url) {
             try {
                 navigator.clipboard.writeText(url);
+                this.copyButtonMessage = 'Copied! ✔️';
+                setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
             } catch (error) {
                 throw error;
             }
