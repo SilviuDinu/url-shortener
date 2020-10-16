@@ -13,16 +13,20 @@
     <main id="app">
         <div class="wrap">
             <form @submit.prevent="createUrl()">
-                <label for="url">Add an Url</label>
+                <label for="url">Please add an URL</label>
                 <input v-model="url" type="text" name="url">
                 <br>
-                <label for="slug">Choose a custom slug</label>
+                <label for="slug">Choose a custom slug (optional) </label>
                 <input v-model="slug" type="text" name="slug">
                 <br>
                 <button type="submit">Shorten</button>
             </form>
-            <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div> 
-            <!-- <div v-if="previousUrls.length > 0" v-for="url in previousUrls[0]"><a v-bind:href="window.location.href + url.slug">{{ window.location.href + url.slug }}</a> -> {{ url.url }}</div> -->
+            <div class="error" v-if="!ok && error.message"><p>{{ error.message }}</p></div>
+            <!-- <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div>  -->
+            <label v-if="newUrl" for="newUrl">Here is your short URL</label>
+            <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl"/>
+            <button v-if="newUrl" :click="copyUrl(newUrl)">Copy</button>
+            <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0"><a v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a> -> {{ url.url }}</div>
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js"

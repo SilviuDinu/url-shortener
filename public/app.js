@@ -5,35 +5,54 @@ var app = new Vue({
         slug: '',
         created: null,
         newUrl: null,
-        previousUrls: [],
+        previousUrls: JSON.parse(typeof localStorage['created_short_urls'] == "undefined" ? null : localStorage['created_short_urls']),
+        previousUrlsLocalStorage: [],
+        error: {
+            message: '',
+            enabled: this.ok
+        },
+        ok: false
     },
     methods: {
         async createUrl() {
             var requestBody = { url: this.url, slug: this.slug };
-            if(requestBody.slug === '') delete requestBody.slug;
-            if(!localStorage.getItem('url_hash')) {
-                localStorage.setItem('url_hash', Math.random().toString(36).substring(7));
-            }
-            requestBody.urlHash = localStorage.getItem('url_hash');
+            if (requestBody.slug === '') delete requestBody.slug;
             var response = await fetch('/url', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody)
             });
-            this.created = await response.json();
-            // this.getPreviousUrls();
-            this.newUrl = window.location.href + this.created.slug;
+            this.ok = await response.ok;
+            if (this.ok) {
+                this.created = await response.json();
+                this.setUrls(await this.created);
+                this.newUrl = window.location.origin + '/' + this.created.slug;
+            } else {
+                this.error.message = 'Oops! Either this slug is already in use, or something went wrong.';
+                throw new Error('Could not shorten this URL. Something went wrong.');
+            }
         },
-        // async getPreviousUrls() {
-        //     var response = await fetch('/hash', {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify({ urlHash: localStorage.getItem('url_hash') })
-        //     });
-        //     this.previousUrls.push(await response.json());
-        // }
+        async setUrls(obj) {
+            if (!obj) return;
+            if (!localStorage.getItem('created_short_urls')) {
+                localStorage.setItem('created_short_urls', JSON.stringify([obj]));
+            }
+            else {
+                this.previousUrlsLocalStorage = JSON.parse(typeof localStorage['created_short_urls'] == "undefined" ? null : localStorage['created_short_urls']);
+                this.previousUrls = this.previousUrlsLocalStorage;
+                if (this.previousUrlsLocalStorage.length > 9) {
+                    this.previousUrlsLocalStorage.pop();
+                };
+                this.previousUrlsLocalStorage.unshift(obj);
+                localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrlsLocalStorage));
+            }
+        },
+        copyUrl(url) {
+            try {
+                navigator.clipboard.writeText(url);
+            } catch (error) {
+                throw error;
+            }
+        }
     },
-    // created () {
-    //     this.getPreviousUrls();
-    // }
 })

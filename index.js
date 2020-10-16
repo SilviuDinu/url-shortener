@@ -37,14 +37,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('./public'));
 
-// app.post('/hash', async (req, res) => {
-//     const { urlHash } = req.body;
-//     const previousUrls = await urls.find({ urlHash });
-//     console.log('req.params', req.params);
-//     if (previousUrls) {
-//         res.send(previousUrls);
-//     }
-// });
 
 app.get('/:id', async (req, res) => {
     const { id: slug } = req.params;
@@ -63,16 +55,14 @@ app.get('/:id', async (req, res) => {
 const schema = yup.object().shape({
     slug: yup.string().trim().matches(/[\w\-]/i),
     url: yup.string().trim().url().required(),
-    urlHash: yup.string().trim()
 });
 
 app.post('/url', async (req, res, next) => {
-    let { slug, url, urlHash } = req.body;
+    let { slug, url } = req.body;
     try {
         await schema.validate({
             slug,
             url,
-            urlHash
         });
         if (!slug) {
             slug = nanoid(4).toLowerCase();
@@ -80,10 +70,12 @@ app.post('/url', async (req, res, next) => {
         const newUrl = {
             url,
             slug,
-            urlHash,
         }
         const created = await urls.insert(newUrl);
-        res.json(created);
+        res.json({
+            url: created.url,
+            slug: created.slug
+        });
     }
     catch (error) {
         next(error);
