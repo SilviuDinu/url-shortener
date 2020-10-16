@@ -1,7 +1,9 @@
 * {
     box-sizing: border-box;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* font-family: 'Press Start 2P', cursive; */
 }
+
 
 body {
     /* background-color: #262626 */
@@ -9,12 +11,14 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center; */
+    /* background-color: #d4418e; */
     background-color: #42376b;
+    /* background: linear-gradient(to bottom right, #0066eb 0%, #ff8ab3 100%); */ 
 }
-
 h1 {
     text-align: center;
-    color: #fff
+    color: #fff;
+    margin-bottom: 40px;
 }
 
  .wrap {
@@ -31,7 +35,8 @@ h1 {
     height: 42.5px;
     /* border-top: none;
     border-right: none;
-    border-left: none; */
+    border-left: none;
+    background-color: inherit; */
     outline: none;
 }
 
@@ -53,6 +58,7 @@ input#newUrl {
     flex-wrap: nowrap;
     flex-direction: column;
     margin-top: 50px;
+    margin-bottom: 100px;
 }
 
 .prev {
@@ -90,10 +96,14 @@ a {
 button {
     height: 42.5px;
     background-color: #007bff;
-    /* box-shadow: 3px 3px 0 0 #ffffff; */
+    box-shadow: 3px 3px 0 0 #ccc;
     color: #fff;
     font-size: 18px;
     outline: none;
+}
+
+label {
+    color: #fff;
 }
 
 button:hover{
