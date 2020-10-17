@@ -48,9 +48,10 @@ var app = new Vue({
                 localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrlsLocalStorage));
             }
         },
-        copyUrl(url) {
+        async copyUrl(url) {
+            var cp = await url;
             try {
-                navigator.clipboard.writeText(url);
+                navigator.clipboard.writeText(cp);
                 this.copyButtonMessage = 'Copied! ✔️';
                 setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
             } catch (error) {
