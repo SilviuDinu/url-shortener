@@ -21,6 +21,15 @@ h1 {
     margin-bottom: 40px;
 }
 
+.loading {
+    background-color: grey;
+    opacity: 0.5;
+}
+
+i {
+    float: right;
+}
+
  .wrap {
    width: 50%;
    margin: 8% auto auto;

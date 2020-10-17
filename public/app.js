@@ -13,9 +13,11 @@ var app = new Vue({
         },
         ok: false,
         copyButtonMessage: 'Copy',
+        loading: false
     },
     methods: {
         async createUrl() {
+            this.loading = true;
             var requestBody = { url: this.url, slug: this.slug };
             if (requestBody.slug === '') delete requestBody.slug;
             var response = await fetch('/url', {
@@ -28,8 +30,10 @@ var app = new Vue({
                 this.created = await response.json();
                 this.setUrls(await this.created);
                 this.newUrl = window.location.origin + '/' + this.created.slug;
+                this.loading = false;
             } else {
                 this.error.message = 'Oops! Either something went wrong, or this slug is already in use 🎯';
+                this.loading = false;
                 throw new Error('Could not shorten this URL. Something went wrong.');
             }
         },
@@ -49,9 +53,8 @@ var app = new Vue({
             }
         },
         async copyUrl(url) {
-            var cp = await url;
             try {
-                navigator.clipboard.writeText(cp);
+                navigator.clipboard.writeText(url);
                 this.copyButtonMessage = 'Copied! ✔️';
                 setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
             } catch (error) {

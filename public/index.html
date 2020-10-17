@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Short Urls</title>
     <link rel="shortcut icon" type="image/jpg" href="favicon.ico" />
 </head>
@@ -20,7 +21,7 @@
                 <!-- <label for="slug">Choose a custom slug (optional) </label> -->
                 <input v-model="slug" type="text" name="slug" placeholder="Choose a custom slug (optional)">
                 <br>
-                <button type="submit" class="short">Shorten</button>
+                <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Shorten<i v-if="loading" class="fa fa-refresh fa-spin"></i></button>
             </form>
             <div class="error" v-if="!ok && error.message">
                 <p>{{ error.message }}</p>

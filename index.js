@@ -31,11 +31,13 @@ app.use(helmet.contentSecurityPolicy({
         scriptSrc: ["'self'", "'unsafe-eval'", 'cdnjs.cloudflare.com'],
         fontSrc: [
             "'self'", // Default policy for specifiying valid sources for fonts loaded using "@font-face": allow all content coming from origin (without subdomains).
-            'https://fonts.gstatic.com' // Google Fonts.
+            'https://fonts.gstatic.com',
+            'https://cdnjs.cloudflare.com'
           ],
           styleSrc: [
             "'self'", // Default policy for valid sources for stylesheets: allow all content coming from origin (without subdomains).
-            'https://fonts.googleapis.com' // Google Fonts.
+            'https://fonts.googleapis.com',
+            'https://cdnjs.cloudflare.com' 
           ],
     }
 }));
