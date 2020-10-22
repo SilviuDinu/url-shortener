@@ -4,6 +4,24 @@
     /* font-family: 'Press Start 2P', cursive; */
 }
 
+.predictor-rating{
+    width: 50%;
+    margin: 8% auto auto;
+    font-size: 16px;
+    text-align: center;
+}
+
+.checked {
+    color: orange;
+  }
+
+.fa.fa-star {
+    font-size: 28px;
+}
+
+.star-ratings {
+    margin-bottom: 20px;
+}
 
 body {
     /* background-color: #262626 */
@@ -69,7 +87,9 @@ input#newUrl {
     margin-top: 50px;
     margin-bottom: 100px;
 }
-
+p {
+    color: #fff;
+}
 .prev {
     width: 60%;
     margin: 0 auto;
@@ -92,7 +112,9 @@ a {
     max-width: 300px;
     align-self: center;
 }
-
+textarea {
+    width: 100%;
+}
 .original-url{
     white-space: nowrap;
     overflow: hidden;
@@ -101,7 +123,9 @@ a {
     align-self: center;
     color: #fff;
 }
-
+#predict{
+    width: 100%;
+}
 button {
     height: 42.5px;
     background-color: #007bff;
@@ -110,7 +134,9 @@ button {
     font-size: 18px;
     outline: none;
 }
-
+#enable-url-shortener {
+    margin-top: 30px;
+}
 label {
     color: #fff;
 }
@@ -133,4 +159,13 @@ button:hover{
     .copy {
         width: 100%;
     }
+}
+.btns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.enable-btn {
+    width: 320px;
+    margin: 8px;
 }

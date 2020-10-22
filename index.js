@@ -7,7 +7,11 @@ const yup = require('yup');
 const monk = require('monk');
 const csp = require('helmet-csp')
 const { nanoid } = require('nanoid');
-const { nextTick } = require('process');
+const csv = require('csv-parser');
+const tf = require('@tensorflow/tfjs');
+const fs = require('fs');
+const csvtojson = require('csvtojson');
+const brain = require('brain.js')
 
 const app = express();
 
@@ -33,12 +37,12 @@ app.use(helmet.contentSecurityPolicy({
             "'self'", // Default policy for specifiying valid sources for fonts loaded using "@font-face": allow all content coming from origin (without subdomains).
             'https://fonts.gstatic.com',
             'https://cdnjs.cloudflare.com'
-          ],
-          styleSrc: [
+        ],
+        styleSrc: [
             "'self'", // Default policy for valid sources for stylesheets: allow all content coming from origin (without subdomains).
             'https://fonts.googleapis.com',
-            'https://cdnjs.cloudflare.com' 
-          ],
+            'https://cdnjs.cloudflare.com'
+        ],
     }
 }));
 
@@ -108,3 +112,77 @@ app.listen(port, () => {
     console.log('Running on port ' + port);
 });
 
+/* ################################
+        - This is the ML part -
+   ################################ */
+
+function buildTrainDataFromCSV() {
+    fs.access('./trainData.json', (err) => {
+        if (!err) {
+            return;
+        } else {
+            csvtojson()
+                .fromFile('./tripadvisor_hotel_reviews.csv')
+                .then((json) => {
+                    console.log('writing...');
+                    fs.writeFileSync('trainData.json', JSON.stringify(json), 'utf-8', (err) => { if (err) console.log(err) })
+                });
+        }
+    });
+}
+
+buildTrainDataFromCSV();
+
+var trainData = require('./trainData.json');
+var goodWordsCounter = 0;
+var averageWordsCounter = 0;
+var badWordsCounter = 0;
+const goodWords = ['charmer', 'great', 'spacious', 'clean', 'very clean', 'nice', 'amazingly', 'beautiful', 'amazing', 'classy', 'luxury', 'luxurious', 'awesome', 'wonderful', 'great', 'loved', 'love', 'excellent', 'easy', 'super','perfect', 'perf', 'pleasant', 'good', 'comfy', 'confortable', 'friendly', 'gorgeous', 'spacious', 'lovely', 'trendy', 'recommed', 'recommend', 'cozy', 'unique', 'exceptional', 'special', 'pretty', 'enjoyed'];
+const averageWords = ['fair', 'average', 'medium', 'not bad', 'kinda', 'kind of', 'decent', 'affordable', 'ok', 'o.k', 'o.k.', 'try', 'tried', 'quite', 'overall', 'overall', 'not world class', 'mediocre', 'adequate','common', 'resonable', 'ordinary', "regular", 'moderate', 'standard', 'tolerable', "not bad", 'simple'];
+const badWords = ['regretably', 'noisy', 'wrong', 'minus','bad', 'hate', 'broken', 'dirty', 'cold', 'disappointed', 'altered', 'stink', 'stinky', 'poor', 'awful', 'dreadful', 'garbage', 'gross', 'disgusting', 'rude', 'sad', 'horrible', 'noise', 'disappointment', 'reluctant', 'complaints', 'loud', "urine", "shit", "bullshit", "crap", "bugs", "insects", "terrible", 'sadly', 'shabby', 'cramped', 'overrated', 'limited', 'yuck'];
+
+// trainData = trainData.map(trainData => ({
+//     input: [trainData.Review],
+//     output: [parseInt(trainData.Rating)]
+// }));
+
+function mapTrainData(n) {
+    var trainedDataAsTensor = [];
+    var max = 0;
+    trainData.forEach(item => {
+        goodWordsCounter = 0;
+        averageWordsCounter = 0;
+        badWordsCounter = 0;
+        goodWords.some(word => {
+            if (item.Review.includes(word)) {
+                goodWordsCounter++;
+            }
+        });
+        averageWords.some(word => {
+            if (item.Review.includes(word)) {
+                averageWordsCounter++;
+            }
+        });
+        badWords.some(word => {
+            if (item.Review.includes(word)) {
+                badWordsCounter++;
+            }
+        });
+        trainedDataAsTensor.push({ input: [goodWordsCounter / goodWords.length, averageWordsCounter / averageWords.length, badWordsCounter / badWords.length], output: [parseFloat(parseInt(item.Rating) / 5)] });
+        // max = item.Review.split(' ').length > max ? item.Review.split(' ').length : max;
+    });
+    // console.log(max)
+    if (n) {
+        return trainedDataAsTensor.slice(0, n);
+    }
+    return trainedDataAsTensor;
+}
+
+trainData = mapTrainData();
+console.log(trainData);
+
+const network = new brain.NeuralNetwork();
+network.train(trainData);
+const output = network.run([0, 0.2, 0.7]);
+
+console.log(output);

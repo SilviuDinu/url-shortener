@@ -3,6 +3,13 @@ var app = new Vue({
     data: {
         url: '',
         slug: '',
+        counter: 0,
+        urlShortener: {
+            enabled: false
+        },
+        ratingPredictor: {
+            enabled: false
+        },
         created: null,
         newUrl: null,
         previousUrls: JSON.parse(typeof localStorage['created_short_urls'] == "undefined" ? null : localStorage['created_short_urls']),
@@ -63,3 +70,4 @@ var app = new Vue({
         }
     },
 })
+

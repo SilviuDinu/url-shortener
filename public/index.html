@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brain/0.6.3/brain.min.js" integrity="sha512-xP328xty9tPILO3Fn/uaxUPbKzxgkpFlfNT3zRDrr6tYEN0qVyP++TlyrP4oQer9MdvgLAIc5V/g+qar6Rt5DA==" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Short Urls</title>
@@ -12,31 +13,58 @@
 
 <body>
     <main id="app">
-        <div class="wrap">
-            <h1>Short Urls</h1>
-            <form @submit.prevent="createUrl()">
-                <!-- <label for="url">Please add an URL</label> -->
-                <input v-model="url" type="text" name="url" placeholder="Please add an URL">
-                <br>
-                <!-- <label for="slug">Choose a custom slug (optional) </label> -->
-                <input v-model="slug" type="text" name="slug" placeholder="Choose a custom slug (optional)">
-                <br>
-                <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Shorten<i v-if="loading" class="fa fa-refresh fa-spin"></i></button>
-            </form>
-            <div class="error" v-if="!ok && error.message">
-                <p>{{ error.message }}</p>
-            </div>
-            <!-- <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div>  -->
-            <label v-if="newUrl" for="newUrl">Here is your short URL</label>
-            <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl" />
-            <button v-if="newUrl" @click="copyUrl(newUrl)" class="copy">{{copyButtonMessage}}</button>
+        <div class="btns">
+            <button class="enable-btn" @click="urlShortener.enabled = !urlShortener.enabled; ratingPredictor.enabled = false;"><span
+                    v-if="!urlShortener.enabled">Enable</span><span v-if="urlShortener.enabled">Disable</span> URL
+                shortener</button>
+            <button class="enable-btn" @click="ratingPredictor.enabled = !ratingPredictor.enabled; urlShortener.enabled = false;"><span
+                    v-if="!ratingPredictor.enabled">Enable</span><span v-if="ratingPredictor.enabled">Disable</span>
+                rating
+                predictor</button>
         </div>
-        <div class="prev-wrapper">
-            <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0" class="prev">
-                <span class="original-url">{{ url.url }}</span>
-                <span class="shortened-url"><a
-                        v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a>
-                </span>
+        <div class="predictor-rating" v-if="ratingPredictor.enabled">
+            <form action="/action_page.php">
+                <h1>Review of Hilton Hotel:</h1>
+                <textarea id="review" name="review" rows="8" cols="50" placeholder="Please leave your review here...">
+                  </textarea>
+                <br><br>
+                <button id="predict" type="submit">Predict my rating</button>
+            </form>
+            <br><br>
+            <div class="star-ratings">
+                <p>Your result: </p>
+                <span v-for="counter in 5" class="fa fa-star" :class="{checked: true}"></span>
+            </div>
+        </div>
+        <hr v-if="urlShortener.enabled && ratingPredictor.enabled">
+        <div v-if="urlShortener.enabled">
+            <div class="wrap">
+                <h1>Short Urls</h1>
+                <form @submit.prevent="createUrl()">
+                    <!-- <label for="url">Please add an URL</label> -->
+                    <input v-model="url" type="text" name="url" placeholder="Please add an URL">
+                    <br>
+                    <!-- <label for="slug">Choose a custom slug (optional) </label> -->
+                    <input v-model="slug" type="text" name="slug" placeholder="Choose a custom slug (optional)">
+                    <br>
+                    <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Shorten<i
+                            v-if="loading" class="fa fa-refresh fa-spin"></i></button>
+                </form>
+                <div class="error" v-if="!ok && error.message">
+                    <p>{{ error.message }}</p>
+                </div>
+                <!-- <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div>  -->
+                <label v-if="newUrl" for="newUrl">Here is your short URL</label>
+                <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl" />
+                <button v-if="newUrl" @click="copyUrl(newUrl)" class="copy">{{copyButtonMessage}}</button>
+            </div>
+            <div class="prev-wrapper">
+                <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0" class="prev">
+                    <span class="original-url">{{ url.url }}</span>
+                    <span class="shortened-url"><a
+                            v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a>
+                    </span>
+                </div>
             </div>
         </div>
     </main>
