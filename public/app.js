@@ -22,6 +22,7 @@ var app = new Vue({
         copyButtonMessage: 'Copy',
         loading: false,
         prediction: null,
+        predictionScore: null,
         review: ''
     },
     methods: {
@@ -80,6 +81,7 @@ var app = new Vue({
             this.ok = await response.ok;
             if (this.ok) {
                 response = await response.json();
+                this.predictionScore = (response.output * 5).toFixed(2);
                 this.prediction = parseInt((response.output * 5).toFixed());
                 this.loading = false;
             } else {

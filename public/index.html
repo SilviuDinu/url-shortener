@@ -33,6 +33,7 @@
             </form>
             <br><br>
             <div class="star-ratings">
+                <p>Predicted score: {{predictionScore}}</p>
                 <p>Your result: </p>
                 <span v-for="(index, counter) in 5" class="fa fa-star" :class="{checked: index <= prediction}"></span>
             </div>

@@ -137,9 +137,9 @@ var trainData = require('./trainData.json');
 var goodWordsCounter = 0;
 var averageWordsCounter = 0;
 var badWordsCounter = 0;
-const goodWords = ['charmer', 'great', 'spacious', 'clean', 'very clean', 'nice', 'amazingly', 'beautiful', 'amazing', 'classy', 'luxury', 'luxurious', 'awesome', 'wonderful', 'great', 'loved', 'love', 'excellent', 'easy', 'super', 'perfect', 'perf', 'pleasant', 'good', 'comfy', 'confortable', 'confortable', 'friendly', 'gorgeous', 'spacious', 'lovely', 'trendy', 'recommed', 'recommend', 'cozy', 'unique', 'exceptional', 'special', 'pretty', 'enjoyed'];
-const averageWords = ['fair', 'average', 'medium', 'not bad', 'kinda', 'kind of', 'decent', 'affordable', 'ok', 'o.k', 'o.k.', 'try', 'tried', 'quite', 'overall', 'not world class', 'mediocre', 'adequate', 'common', 'resonable', 'ordinary', "regular", 'moderate', 'standard', 'tolerable', "not bad", 'simple', 'meh'];
-const badWords = ['regretably', 'noisy', 'wrong', 'minus', 'bad', 'hate', 'broken', 'dirty', 'cold', 'disappointed', 'altered', 'stink', 'stinky', 'poor', 'awful', 'dreadful', 'garbage', 'gross', 'disgusting', 'rude', 'sad', 'horrible', 'noise', 'disappointment', 'reluctant', 'complaints', 'loud', "urine", "shit", "bullshit", "crap", "bugs", "insects", "terrible", 'sadly', 'shabby', 'cramped', 'overrated', 'limited', 'yuck'];
+const goodWords = ['charmer', 'great', 'generous', 'spacious', 'clean', 'very clean', 'nice', 'amazingly', 'beautiful', 'amazing', 'classy', 'luxury', 'luxurious', 'awesome', 'wonderful', 'great', 'loved', 'love', 'excellent', 'easy', 'super', 'perfect', 'perf', 'pleasant', 'good', 'comfy', 'confortable', 'confortable', 'friendly', 'gorgeous', 'spacious', 'lovely', 'trendy', 'recommed', 'recommend', 'cozy', 'unique', 'exceptional', 'special', 'delicious', 'pretty', 'enjoyed', 'like', 'liked', 'pleasantly', 'positive', 'tidy', 'handy'];
+const averageWords = ['fair', 'average', 'medium', 'not bad', 'kinda', 'kind of', 'decent', 'affordable', 'ok', 'o.k', 'o.k.', 'quite', 'overall', 'not world class', 'mediocre', 'adequate', 'common', 'resonable', 'ordinary', "regular", 'moderate', 'standard', 'tolerable', "not bad", 'simple', 'meh', 'decent experience', 'good overall experience', 'meh', 'idk', 'okay', 'convinient'];
+const badWords = ['regretably', 'noisy', 'wrong', 'minus', 'bad', 'hate', 'broken', 'dirty', 'cold', 'disappointed', 'altered', 'stink', 'stinky', 'poor', 'awful', 'dreadful', 'garbage', 'gross', 'disgusting', 'rude', 'sad', 'horrible', 'noise', 'disappointment', 'reluctant', 'complaints', 'loud', "urine", "shit", "bullshit", "crap", "bugs", "insects", "terrible", 'sadly', 'shabby', 'cramped', 'overrated', 'limited', 'yuck', 'malfunctioned', 'disorganized', 'non functioning', 'rock', 'hard', 'annoying', 'bothered', 'lack', 'uncomfortable', 'not recommend', 'wouldn\'t recommend', 'worst'];
 
 // trainData = trainData.map(trainData => ({
 //     input: [trainData.Review],
@@ -191,8 +191,8 @@ network.train(trainData);
 
 async function mapReviewAsTensor(review) {
     console.log(review);
-    var result = getWordsCounterInfo({ Review: review } );
-    return await result;
+    var result = getWordsCounterInfo({ Review: review });
+    return await [result[0] / goodWords.length, result[1] / averageWords.length, result[2] / badWords.length];
 }
 
 app.post('/review/predict', async (req, res) => {
