@@ -114,6 +114,7 @@ a {
 }
 textarea {
     width: 100%;
+    padding: 15px;
 }
 .original-url{
     white-space: nowrap;

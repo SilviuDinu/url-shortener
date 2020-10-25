@@ -23,17 +23,18 @@
                 predictor</button>
         </div>
         <div class="predictor-rating" v-if="ratingPredictor.enabled">
-            <form action="/action_page.php">
+            <form @submit.prevent="predictRating(review)">
                 <h1>Review of Hilton Hotel:</h1>
-                <textarea id="review" name="review" rows="8" cols="50" placeholder="Please leave your review here...">
+                <textarea id="review" name="review" rows="8" cols="50" v-model="review" placeholder="Please leave your review here...">
                   </textarea>
                 <br><br>
-                <button id="predict" type="submit">Predict my rating</button>
+                <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Predict my rating<i
+                    v-if="loading" class="fa fa-refresh fa-spin"></i></button>
             </form>
             <br><br>
             <div class="star-ratings">
                 <p>Your result: </p>
-                <span v-for="counter in 5" class="fa fa-star" :class="{checked: true}"></span>
+                <span v-for="(index, counter) in 5" class="fa fa-star" :class="{checked: index <= prediction}"></span>
             </div>
         </div>
         <hr v-if="urlShortener.enabled && ratingPredictor.enabled">

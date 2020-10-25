@@ -20,7 +20,9 @@ var app = new Vue({
         },
         ok: false,
         copyButtonMessage: 'Copy',
-        loading: false
+        loading: false,
+        prediction: null,
+        review: ''
     },
     methods: {
         async createUrl() {
@@ -67,7 +69,25 @@ var app = new Vue({
             } catch (error) {
                 throw error;
             }
-        }
+        },
+        async predictRating() {
+            this.loading = true;
+            var response = await fetch('/review/predict', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ review: this.review })
+            });
+            this.ok = await response.ok;
+            if (this.ok) {
+                response = await response.json();
+                this.prediction = parseInt((response.output * 5).toFixed());
+                this.loading = false;
+            } else {
+                this.error.message = 'Oops! Something went wrong while processing this request 🎯';
+                this.loading = false;
+                throw new Error('Could not shorten this URL. Something went wrong.');
+            }
+        },
     },
 })
 

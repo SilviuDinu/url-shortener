@@ -137,38 +137,43 @@ var trainData = require('./trainData.json');
 var goodWordsCounter = 0;
 var averageWordsCounter = 0;
 var badWordsCounter = 0;
-const goodWords = ['charmer', 'great', 'spacious', 'clean', 'very clean', 'nice', 'amazingly', 'beautiful', 'amazing', 'classy', 'luxury', 'luxurious', 'awesome', 'wonderful', 'great', 'loved', 'love', 'excellent', 'easy', 'super','perfect', 'perf', 'pleasant', 'good', 'comfy', 'confortable', 'friendly', 'gorgeous', 'spacious', 'lovely', 'trendy', 'recommed', 'recommend', 'cozy', 'unique', 'exceptional', 'special', 'pretty', 'enjoyed'];
-const averageWords = ['fair', 'average', 'medium', 'not bad', 'kinda', 'kind of', 'decent', 'affordable', 'ok', 'o.k', 'o.k.', 'try', 'tried', 'quite', 'overall', 'overall', 'not world class', 'mediocre', 'adequate','common', 'resonable', 'ordinary', "regular", 'moderate', 'standard', 'tolerable', "not bad", 'simple'];
-const badWords = ['regretably', 'noisy', 'wrong', 'minus','bad', 'hate', 'broken', 'dirty', 'cold', 'disappointed', 'altered', 'stink', 'stinky', 'poor', 'awful', 'dreadful', 'garbage', 'gross', 'disgusting', 'rude', 'sad', 'horrible', 'noise', 'disappointment', 'reluctant', 'complaints', 'loud', "urine", "shit", "bullshit", "crap", "bugs", "insects", "terrible", 'sadly', 'shabby', 'cramped', 'overrated', 'limited', 'yuck'];
+const goodWords = ['charmer', 'great', 'spacious', 'clean', 'very clean', 'nice', 'amazingly', 'beautiful', 'amazing', 'classy', 'luxury', 'luxurious', 'awesome', 'wonderful', 'great', 'loved', 'love', 'excellent', 'easy', 'super', 'perfect', 'perf', 'pleasant', 'good', 'comfy', 'confortable', 'confortable', 'friendly', 'gorgeous', 'spacious', 'lovely', 'trendy', 'recommed', 'recommend', 'cozy', 'unique', 'exceptional', 'special', 'pretty', 'enjoyed'];
+const averageWords = ['fair', 'average', 'medium', 'not bad', 'kinda', 'kind of', 'decent', 'affordable', 'ok', 'o.k', 'o.k.', 'try', 'tried', 'quite', 'overall', 'not world class', 'mediocre', 'adequate', 'common', 'resonable', 'ordinary', "regular", 'moderate', 'standard', 'tolerable', "not bad", 'simple', 'meh'];
+const badWords = ['regretably', 'noisy', 'wrong', 'minus', 'bad', 'hate', 'broken', 'dirty', 'cold', 'disappointed', 'altered', 'stink', 'stinky', 'poor', 'awful', 'dreadful', 'garbage', 'gross', 'disgusting', 'rude', 'sad', 'horrible', 'noise', 'disappointment', 'reluctant', 'complaints', 'loud', "urine", "shit", "bullshit", "crap", "bugs", "insects", "terrible", 'sadly', 'shabby', 'cramped', 'overrated', 'limited', 'yuck'];
 
 // trainData = trainData.map(trainData => ({
 //     input: [trainData.Review],
 //     output: [parseInt(trainData.Rating)]
 // }));
 
+function getWordsCounterInfo(item) {
+    goodWordsCounter = 0;
+    averageWordsCounter = 0;
+    badWordsCounter = 0;
+    goodWords.some(word => {
+        if (item.Review.includes(word)) {
+            goodWordsCounter++;
+        }
+    });
+    averageWords.some(word => {
+        if (item.Review.includes(word)) {
+            averageWordsCounter++;
+        }
+    });
+    badWords.some(word => {
+        if (item.Review.includes(word)) {
+            badWordsCounter++;
+        }
+    });
+    return [goodWordsCounter, averageWordsCounter, badWordsCounter];
+}
+
 function mapTrainData(n) {
     var trainedDataAsTensor = [];
     var max = 0;
     trainData.forEach(item => {
-        goodWordsCounter = 0;
-        averageWordsCounter = 0;
-        badWordsCounter = 0;
-        goodWords.some(word => {
-            if (item.Review.includes(word)) {
-                goodWordsCounter++;
-            }
-        });
-        averageWords.some(word => {
-            if (item.Review.includes(word)) {
-                averageWordsCounter++;
-            }
-        });
-        badWords.some(word => {
-            if (item.Review.includes(word)) {
-                badWordsCounter++;
-            }
-        });
-        trainedDataAsTensor.push({ input: [goodWordsCounter / goodWords.length, averageWordsCounter / averageWords.length, badWordsCounter / badWords.length], output: [parseFloat(parseInt(item.Rating) / 5)] });
+        var result = getWordsCounterInfo(item);
+        trainedDataAsTensor.push({ input: [result[0] / goodWords.length, result[1] / averageWords.length, result[2] / badWords.length], output: [parseFloat(parseInt(item.Rating) / 5)] });
         // max = item.Review.split(' ').length > max ? item.Review.split(' ').length : max;
     });
     // console.log(max)
@@ -179,10 +184,30 @@ function mapTrainData(n) {
 }
 
 trainData = mapTrainData();
-console.log(trainData);
+// console.log(trainData);
 
 const network = new brain.NeuralNetwork();
 network.train(trainData);
-const output = network.run([0, 0.2, 0.7]);
 
-console.log(output);
+async function mapReviewAsTensor(review) {
+    console.log(review);
+    var result = getWordsCounterInfo({ Review: review } );
+    return await result;
+}
+
+app.post('/review/predict', async (req, res) => {
+    const { review } = req.body;
+    const input = await mapReviewAsTensor(review);
+    console.log('input', input);
+    try {
+        const output = await network.run(await input);
+        if (output) {
+            res.json({
+                output: output[0]
+            })
+        }
+    }
+    catch (err) {
+        throw new Error('Error predicting this review');
+    }
+});
