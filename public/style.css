@@ -202,6 +202,16 @@ button:hover {
         padding-bottom: 10px;
         width: 60%;
     }
+    .shortened-url {
+        max-width: 70%;
+    }
+    .shortened-url-wrap,
+    .original-url-wrap {
+        max-width: 60%;
+    }
+    .original-url {
+        max-width: 80%;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1024px) {
@@ -225,11 +235,11 @@ button:hover {
         width: 100%;
     }
     .shortened-url {
-        max-width: 60%;
+        max-width: 50%;
     }
     .shortened-url-wrap,
     .original-url-wrap {
-        max-width: 60%;
+        max-width: 50%;
     }
     .original-url {
         max-width: 80%;
