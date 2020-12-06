@@ -43,8 +43,8 @@
                 </span>
 
                     <!-- <span class="vertical-bar"> | </span> -->
-                    <span><i class="fa fa-copy" @click="copyUrl(window.location.origin + '/' + url.slug, event)" alt="Copy"></i></span>
-                    <span><i class="fa fa-trash" @click="deleteOptions.expand = true; deleteOptions.expandedIndex = index" alt="Delete"></i></span>
+                    <span><i class="fa fa-copy" @click="copyUrl(window.location.origin + '/' + url.slug, event)" alt="Copy" title="Copy"></i></span>
+                    <span><i class="fa fa-trash" @click="deleteOptions.expand = true; deleteOptions.expandedIndex = index" alt="Delete" title="Delete"></i></span>
 
                 </div>
                 <div class="delete-options" :class="{active: deleteOptions.expand && index === deleteOptions.expandedIndex}" v-if="deleteOptions.expand && index === deleteOptions.expandedIndex">
