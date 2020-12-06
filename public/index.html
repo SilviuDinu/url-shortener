@@ -21,7 +21,8 @@
                 <!-- <label for="slug">Choose a custom slug (optional) </label> -->
                 <input v-model="slug" type="text" name="slug" placeholder="Choose a custom slug (optional)">
                 <br>
-                <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Shorten<i v-if="loading" class="fa fa-refresh fa-spin"></i></button>
+                <button type="submit" class="short" :disabled="loading" :class="{loading: loading}">Shorten<i
+                        v-if="loading" class="fa fa-refresh fa-spin"></i></button>
             </form>
             <div class="error" v-if="!ok && error.message">
                 <p>{{ error.message }}</p>
@@ -29,20 +30,32 @@
             <!-- <div v-if="created"><a v-bind:href="newUrl">{{ newUrl }}</a> -> {{ created.url }}</div>  -->
             <label v-if="newUrl" for="newUrl">Here is your short URL</label>
             <input type="text" v-if="newUrl" v-model="newUrl" name="newUrl" id="newUrl" />
-            <button v-if="newUrl" @click="copyUrl(newUrl)" class="copy">{{copyButtonMessage}}</button>
+            <button v-if="newUrl" @click="copyUrl(newUrl, event)" class="copy">{{copyButtonMessage}}</button>
         </div>
         <div class="prev-wrapper">
-            <div v-for="url in previousUrls" v-if="previousUrls && previousUrls.length > 0" class="prev">
-                <span class="original-url">{{ url.url }}</span>
-                <span class="shortened-url"><a
+            <div v-for="(url, index) in previousUrls" v-if="previousUrls && previousUrls.length > 0" class="prev">
+                <div class="original-url-wrap" v-if="!(deleteOptions.expand && index === deleteOptions.expandedIndex)">
+                    <span class="original-url">{{ url.url }}</span>
+                </div>
+                <div class="shortened-url-wrap" v-if="!(deleteOptions.expand && index === deleteOptions.expandedIndex)">
+                    <span class="shortened-url"><a
                         v-bind:href="window.location.origin + '/' + url.slug">{{ window.location.origin + '/' + url.slug }}</a>
                 </span>
+
+                    <!-- <span class="vertical-bar"> | </span> -->
+                    <span><i class="fa fa-copy" @click="copyUrl(window.location.origin + '/' + url.slug, event)" alt="Copy"></i></span>
+                    <span><i class="fa fa-trash" @click="deleteOptions.expand = true; deleteOptions.expandedIndex = index" alt="Delete"></i></span>
+
+                </div>
+                <div class="delete-options" :class="{active: deleteOptions.expand && index === deleteOptions.expandedIndex}" v-if="deleteOptions.expand && index === deleteOptions.expandedIndex">
+                    <div class="option-1"><button class="option list" @click="deleteUrl(deleteOptions.list, index, url.slug); deleteOptions.expand = false">{{ deleteOptions.list }}</button></div>
+                    <div class="option-2"><button class="option db" @click="deleteUrl(deleteOptions.db, index, url.slug); deleteOptions.expand = false">{{ deleteOptions.db }}</button></div>
+                    <div class="option-3"><button class="option cancel" @click="deleteOptions.expand = false">Cancel</button></div>
+                </div>
             </div>
         </div>
     </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js"
-        integrity="sha512-ZjkdNWvVA3C4ZhiL2HoYnUVHB0cLCJwQl/YU5IXgmVSGSsLhpBg5rAIiltBeEpjjNcmxb2F4nePSh1O91J0FCg=="
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.min.js" integrity="sha512-ZjkdNWvVA3C4ZhiL2HoYnUVHB0cLCJwQl/YU5IXgmVSGSsLhpBg5rAIiltBeEpjjNcmxb2F4nePSh1O91J0FCg==" crossorigin="anonymous"></script>
     <script src="app.js"></script>
 </body>
 

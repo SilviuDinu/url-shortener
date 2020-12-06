@@ -13,7 +13,13 @@ var app = new Vue({
         },
         ok: false,
         copyButtonMessage: 'Copy',
-        loading: false
+        loading: false,
+        deleteOptions: {
+            expand: false,
+            expandedIndex: null,
+            list: 'Delete from this list only',
+            db: 'Delete from database also'
+        },
     },
     methods: {
         async createUrl() {
@@ -41,8 +47,7 @@ var app = new Vue({
             if (!obj) return;
             if (!localStorage.getItem('created_short_urls')) {
                 localStorage.setItem('created_short_urls', JSON.stringify([obj]));
-            }
-            else {
+            } else {
                 this.previousUrlsLocalStorage = JSON.parse(typeof localStorage['created_short_urls'] == "undefined" ? null : localStorage['created_short_urls']);
                 this.previousUrls = this.previousUrlsLocalStorage;
                 if (this.previousUrlsLocalStorage.length > 9) {
@@ -52,13 +57,31 @@ var app = new Vue({
                 localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrlsLocalStorage));
             }
         },
-        async copyUrl(url) {
+        async copyUrl(url, e) {
             try {
                 navigator.clipboard.writeText(url);
-                this.copyButtonMessage = 'Copied! ✔️';
-                setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
+                if (e.target.nodeName === 'BUTTON') {
+                    this.copyButtonMessage = 'Copied! ✔️';
+                    setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
+                }
             } catch (error) {
                 throw error;
+            }
+        },
+        async deleteUrl(option, index, slug) {
+            switch (option) {
+                case this.deleteOptions.list:
+                    this.previousUrls.splice(index, 1);
+                    localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrls));
+                    break;
+                case this.deleteOptions.db:
+                    var response = await fetch('/delete', {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ slug: slug })
+                    });                    
+                    this.deleteUrl(this.deleteOptions.list, index, slug);
+                    break;
             }
         }
     },

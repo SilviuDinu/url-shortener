@@ -27,18 +27,19 @@ app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'unpkg.com', 'cdn.jsdelivr.net',
-            'fonts.googleapis.com', 'use.fontawesome.com'],
+            'fonts.googleapis.com', 'use.fontawesome.com'
+        ],
         scriptSrc: ["'self'", "'unsafe-eval'", 'cdnjs.cloudflare.com'],
         fontSrc: [
             "'self'", // Default policy for specifiying valid sources for fonts loaded using "@font-face": allow all content coming from origin (without subdomains).
             'https://fonts.gstatic.com',
             'https://cdnjs.cloudflare.com'
-          ],
-          styleSrc: [
+        ],
+        styleSrc: [
             "'self'", // Default policy for valid sources for stylesheets: allow all content coming from origin (without subdomains).
             'https://fonts.googleapis.com',
-            'https://cdnjs.cloudflare.com' 
-          ],
+            'https://cdnjs.cloudflare.com'
+        ],
     }
 }));
 
@@ -48,7 +49,7 @@ app.use(express.json());
 app.use(express.static('./public'));
 
 
-app.get('/:id', async (req, res) => {
+app.get('/:id', async(req, res) => {
     const { id: slug } = req.params;
     try {
         const url = await urls.findOne({ slug });
@@ -56,8 +57,7 @@ app.get('/:id', async (req, res) => {
             res.redirect(url.url);
         }
         res.redirect(`/?error=${slug}-not-found`)
-    }
-    catch (error) {
+    } catch (error) {
         res.redirect('/?error=Link-not-found');
     }
 });
@@ -67,7 +67,7 @@ const schema = yup.object().shape({
     url: yup.string().trim().url().required(),
 });
 
-app.post('/url', async (req, res, next) => {
+app.post('/url', async(req, res, next) => {
     let { slug, url } = req.body;
     try {
         await schema.validate({
@@ -86,8 +86,24 @@ app.post('/url', async (req, res, next) => {
             url: created.url,
             slug: created.slug
         });
+    } catch (error) {
+        next(error);
     }
-    catch (error) {
+});
+
+app.post('/delete', async(req, res, next) => {
+    let { slug } = req.body;
+    try {
+        if (!slug) {
+            next({message: "No slug provided 😞."});
+            return;
+        }
+        const removed = await urls.remove({ slug });
+        res.json({
+            slug: slug,
+            deleted: removed.deletedCount
+        });
+    } catch (error) {
         next(error);
     }
 });
@@ -107,4 +123,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log('Running on port ' + port);
 });
-

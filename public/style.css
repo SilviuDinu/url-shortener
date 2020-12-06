@@ -4,7 +4,6 @@
     /* font-family: 'Press Start 2P', cursive; */
 }
 
-
 body {
     /* background-color: #262626 */
     /* display: flex;
@@ -13,8 +12,9 @@ body {
     align-items: center; */
     /* background-color: #d4418e; */
     background-color: #42376b;
-    /* background: linear-gradient(to bottom right, #0066eb 0%, #ff8ab3 100%); */ 
+    /* background: linear-gradient(to bottom right, #0066eb 0%, #ff8ab3 100%); */
 }
+
 h1 {
     text-align: center;
     color: #fff;
@@ -30,14 +30,15 @@ i {
     float: right;
 }
 
- .wrap {
-   width: 50%;
-   margin: 8% auto auto;
-   font-size: 16px;
- }
+.wrap {
+    width: 50%;
+    margin: 8% auto auto;
+    font-size: 16px;
+}
 
- input, label {
-    display:block;
+input,
+label {
+    display: block;
     margin: 5px 5px 0 0;
     padding: 5px;
     width: 100%;
@@ -73,19 +74,73 @@ input#newUrl {
 .prev {
     width: 60%;
     margin: 0 auto;
-    height: 42.5px;
     border-bottom: 1px solid;
     font-size: 16px;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid lightgrey;
     padding: 20px;
-    margin: 8px auto auto;
+    margin: 0 auto;
 }
+
+.urls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+i.fa-copy,
+i.fa-trash {
+    font-size: 24px;
+    margin-left: 18px;
+    cursor: pointer;
+}
+
+i.fa-copy {
+    color: green;
+}
+
+i.fa-copy:hover {
+    opacity: 0.7;
+}
+
+i.fa-trash {
+    color: #ff0000;
+}
+
+i.fa-trash:hover {
+    opacity: 0.7;
+}
+
+.delete-options.active {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.delete-options.active>div {
+    width: 27.5%;
+}
+
+.option {
+    width: 100%;
+    height: auto;
+}
+
+.option.list,
+.option.db {
+    background-color: #ff0000;
+}
+
 a {
     color: #007bff;
 }
-.shortened-url{
+
+.inactive {
+    display: none !important;
+}
+
+.shortened-url {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -93,13 +148,25 @@ a {
     align-self: center;
 }
 
-.original-url{
+.original-url {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 500px;
+    max-width: 530px;
     align-self: center;
     color: #fff;
+}
+
+.shortened-url-wrap,
+.original-url-wrap {
+    display: flex;
+}
+
+.vertical-bar {
+    color: #fff;
+    width: 2px;
+    margin-left: 10px;
+    margin-right: 0px;
 }
 
 button {
@@ -115,7 +182,7 @@ label {
     color: #fff;
 }
 
-button:hover{
+button:hover {
     opacity: 0.7;
     cursor: pointer;
 }
@@ -125,12 +192,69 @@ button:hover{
 }
 
 @media (max-width: 1024px) {
+    .delete-options.active {
+        flex-direction: column;
+    }
+    .delete-options.active>div {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 60%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1024px) {
+    .copy {
+        width: 18%;
+    }
+}
+
+@media (max-width: 768px) {
     input#newUrl {
         width: 100%;
         margin-bottom: 16px;
     }
-    
     .copy {
         width: 100%;
+    }
+    .wrap {
+        width: 70%;
+    }
+    .prev {
+        width: 100%;
+    }
+    .shortened-url {
+        max-width: 60%;
+    }
+    .shortened-url-wrap,
+    .original-url-wrap {
+        max-width: 60%;
+    }
+    .original-url {
+        max-width: 80%;
+    }
+    .delete-options.active {
+        flex-direction: column;
+    }
+    .delete-options.active>div {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .shortened-url {
+        max-width: 90%;
+    }
+    .shortened-url-wrap,
+    .original-url-wrap {
+        max-width: 50%;
+    }
+    .original-url {
+        max-width: 90%;
     }
 }
