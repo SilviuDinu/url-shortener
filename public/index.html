@@ -47,7 +47,7 @@
                     <span><i class="fa fa-trash" @click="deleteOptions.expand = true; deleteOptions.expandedIndex = index" alt="Delete" title="Delete"></i></span>
 
                 </div>
-                <div class="delete-options" :class="{active: deleteOptions.expand && index === deleteOptions.expandedIndex}" v-if="deleteOptions.expand && index === deleteOptions.expandedIndex">
+                <div class="delete-options" :class="{active: deleteOptions.expand && index === deleteOptions.expandedIndex}">
                     <div class="option-1"><button class="option list" @click="deleteUrl(deleteOptions.list, index, url.slug); deleteOptions.expand = false">{{ deleteOptions.list }}</button></div>
                     <div class="option-2"><button class="option db" @click="deleteUrl(deleteOptions.db, index, url.slug); deleteOptions.expand = false">{{ deleteOptions.db }}</button></div>
                     <div class="option-3"><button class="option cancel" @click="deleteOptions.expand = false">Cancel</button></div>
