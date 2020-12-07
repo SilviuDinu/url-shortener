@@ -204,6 +204,11 @@ a {
     display: flex;
 }
 
+.error {
+    color: #ff0000;
+    font-size: 20px;
+}
+
 .vertical-bar {
     color: #fff;
     width: 2px;
@@ -231,6 +236,7 @@ button:hover {
 
 .short {
     width: 100%;
+    margin: 5px 5px 0 0;
 }
 
 @media (max-width: 1024px) {

@@ -26,6 +26,12 @@ var app = new Vue({
     methods: {
         async createUrl() {
             this.loading = true;
+            if (!this.url) {
+                this.error.message = 'You cannot shorten an empty URL now, can you? 😶';
+                this.loading = false;
+                this.newUrl = null;
+                return;
+            }
             var requestBody = { url: this.url, slug: this.slug };
             if (requestBody.slug === '') delete requestBody.slug;
             var response = await fetch('/url', {
