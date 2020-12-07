@@ -13,6 +13,7 @@ body {
     /* background-color: #d4418e; */
     background-color: #42376b;
     /* background: linear-gradient(to bottom right, #0066eb 0%, #ff8ab3 100%); */
+    overflow-x: hidden;
 }
 
 h1 {
