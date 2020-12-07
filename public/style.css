@@ -13,6 +13,7 @@ body {
     /* background-color: #d4418e; */
     background-color: #42376b;
     /* background: linear-gradient(to bottom right, #0066eb 0%, #ff8ab3 100%); */
+    overflow: hidden;
 }
 
 h1 {
@@ -36,8 +37,7 @@ i {
     font-size: 16px;
 }
 
-input,
-label {
+input, label {
     display: block;
     margin: 5px 5px 0 0;
     padding: 5px;
@@ -88,8 +88,7 @@ input#newUrl {
     justify-content: flex-end;
 }
 
-i.fa-copy,
-i.fa-trash {
+i.fa-copy, i.fa-trash {
     font-size: 24px;
     margin-left: 18px;
     cursor: pointer;
@@ -122,17 +121,54 @@ i.fa-trash:hover {
     width: 100%;
 }
 
+@-webkit-keyframes slide {
+    100% {
+        transform: translate(0);
+    }
+}
+
+@keyframes slide {
+    100% {
+        transform: translate(0);
+    }
+}
+
+@media (min-width: 1200px) {
+    .delete-options{
+        transform: translate(50%);
+        overflow: hidden;
+    }
+    .delete-options.active {
+        -webkit-animation: slide 0.5s forwards;
+        -webkit-animation-delay: 0s;
+        animation: slide 0.5s forwards;
+        animation-delay: 0s;
+        overflow: hidden;
+    }
+    @-webkit-keyframes slide {
+        100% {
+            transform: translate(0);
+        }
+    }
+    
+    @keyframes slide {
+        100% {
+            transform: translate(0);
+        }
+    }
+}
+
 .delete-options.active>div {
     width: 27.5%;
+    overflow: hidden;
 }
 
 .option {
     width: 100%;
-    height: auto;
+    height: 35.5px
 }
 
-.option.list,
-.option.db {
+.option.list, .option.db {
     background-color: #ff0000;
 }
 
@@ -161,8 +197,7 @@ a {
     color: #fff;
 }
 
-.shortened-url-wrap,
-.original-url-wrap {
+.shortened-url-wrap, .original-url-wrap {
     display: flex;
 }
 
@@ -207,11 +242,10 @@ button:hover {
         width: 60%;
     }
     .shortened-url {
-        max-width: 70%;
+        max-width: 100%;
     }
-    .shortened-url-wrap,
-    .original-url-wrap {
-        max-width: 60%;
+    .shortened-url-wrap, .original-url-wrap {
+        max-width: 50%;
     }
     .original-url {
         max-width: 80%;
@@ -239,14 +273,13 @@ button:hover {
         width: 100%;
     }
     .shortened-url {
-        max-width: 50%;
+        max-width: 70%;
     }
-    .shortened-url-wrap,
-    .original-url-wrap {
+    .shortened-url-wrap, .original-url-wrap {
         max-width: 50%;
     }
     .original-url {
-        max-width: 80%;
+        max-width: 90%;
     }
     .delete-options.active {
         flex-direction: column;
@@ -264,8 +297,7 @@ button:hover {
     .shortened-url {
         max-width: 90%;
     }
-    .shortened-url-wrap,
-    .original-url-wrap {
+    .shortened-url-wrap, .original-url-wrap {
         max-width: 50%;
     }
     .original-url {
