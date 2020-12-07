@@ -88,14 +88,18 @@ input#newUrl {
     justify-content: flex-end;
 }
 
-i.fa-copy, i.fa-trash {
+i.fa-copy, i.fa-trash, i.fa-check {
     font-size: 24px;
     margin-left: 18px;
     cursor: pointer;
 }
 
-i.fa-copy {
+i.fa-copy{
     color: green;
+}
+
+i.fa-check {
+    color: #007bff;
 }
 
 i.fa-copy:hover {
@@ -160,7 +164,6 @@ i.fa-trash:hover {
 
 .delete-options.active>div {
     width: 27.5%;
-    overflow: hidden;
 }
 
 .option {

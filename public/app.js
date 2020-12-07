@@ -20,6 +20,8 @@ var app = new Vue({
             list: 'Delete from this list only',
             db: 'Delete from database also'
         },
+        copiedIndex: -1,
+        timeouts: []
     },
     methods: {
         async createUrl() {
@@ -57,12 +59,22 @@ var app = new Vue({
                 localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrlsLocalStorage));
             }
         },
-        async copyUrl(url, e) {
+        async copyUrl(url, e, index) {
             try {
                 navigator.clipboard.writeText(url);
                 if (e.target.nodeName === 'BUTTON') {
                     this.copyButtonMessage = 'Copied! ✔️';
                     setTimeout(() => this.copyButtonMessage = 'Copy', 2000);
+                } else {
+                    if(this.copiedIndex !== index && this.timeouts.length > 0) {
+                        this.timeouts.forEach(timeout => {
+                            clearTimeout(timeout);
+                            this.timeouts = [];
+                        });
+                    }
+                    this.copiedIndex = index;
+                    var timeout = setTimeout(() => this.copiedIndex = -1, 2000);
+                    this.timeouts.push(timeout);
                 }
             } catch (error) {
                 throw error;
