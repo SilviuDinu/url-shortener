@@ -67,7 +67,7 @@ const schema = yup.object().shape({
     url: yup.string().trim().url().required(),
 });
 
-app.post('/url', async (req, res, next) => {
+app.post('/api/url', async (req, res, next) => {
     let { slug, url } = req.body;
     try {
         await schema.validate({
@@ -91,8 +91,9 @@ app.post('/url', async (req, res, next) => {
     }
 });
 
-app.post('/delete', async (req, res, next) => {
-    let { slug } = req.body;
+app.delete('/api/delete/:id', async (req, res, next) => {
+    let { id: slug } = req.params;
+    console.log(req.params)
     try {
         if (!slug) {
             next({ message: "No slug provided 😞." });
@@ -108,7 +109,7 @@ app.post('/delete', async (req, res, next) => {
     }
 });
 
-app.get('/api/v1/records', async (req, res, next) => {
+app.get('/api/records', async (req, res, next) => {
     console.log(req)
     try {
         const records = await urls.find({});

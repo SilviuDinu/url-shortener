@@ -34,7 +34,7 @@ var app = new Vue({
             }
             var requestBody = { url: this.url, slug: this.slug };
             if (requestBody.slug === '') delete requestBody.slug;
-            var response = await fetch('/url', {
+            var response = await fetch('/api/url', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody)
@@ -93,10 +93,9 @@ var app = new Vue({
                     localStorage.setItem('created_short_urls', JSON.stringify(this.previousUrls));
                     break;
                 case this.deleteOptions.db:
-                    var response = await fetch('/delete', {
-                        method: "POST",
+                    var response = await fetch(`/api/delete/${slug}`, {
+                        method: "DELETE",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ slug: slug })
                     });                    
                     this.deleteUrl(this.deleteOptions.list, index, slug);
                     break;
