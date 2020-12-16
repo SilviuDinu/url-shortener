@@ -27,9 +27,9 @@ app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'unpkg.com', 'cdn.jsdelivr.net',
-            'fonts.googleapis.com', 'use.fontawesome.com'
+            'fonts.googleapis.com', 'use.fontawesome.com', 'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ'
         ],
-        scriptSrc: ["'self'", "'unsafe-eval'", 'cdnjs.cloudflare.com'],
+        scriptSrc: ["'self'", "'unsafe-eval'", 'cdnjs.cloudflare.com', 'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ'],
         fontSrc: [
             "'self'", // Default policy for specifiying valid sources for fonts loaded using "@font-face": allow all content coming from origin (without subdomains).
             'https://fonts.gstatic.com',
@@ -49,7 +49,7 @@ app.use(express.json());
 app.use(express.static('./public'));
 
 
-app.get('/:id', async(req, res) => {
+app.get('/:id', async (req, res) => {
     const { id: slug } = req.params;
     try {
         const url = await urls.findOne({ slug });
@@ -67,7 +67,7 @@ const schema = yup.object().shape({
     url: yup.string().trim().url().required(),
 });
 
-app.post('/url', async(req, res, next) => {
+app.post('/url', async (req, res, next) => {
     let { slug, url } = req.body;
     try {
         await schema.validate({
@@ -91,11 +91,11 @@ app.post('/url', async(req, res, next) => {
     }
 });
 
-app.post('/delete', async(req, res, next) => {
+app.post('/delete', async (req, res, next) => {
     let { slug } = req.body;
     try {
         if (!slug) {
-            next({message: "No slug provided 😞."});
+            next({ message: "No slug provided 😞." });
             return;
         }
         const removed = await urls.remove({ slug });
@@ -104,6 +104,28 @@ app.post('/delete', async(req, res, next) => {
             deleted: removed.deletedCount
         });
     } catch (error) {
+        next(error);
+    }
+});
+
+app.get('/api/v1/records', async (req, res, next) => {
+    console.log(req)
+    try {
+        const records = await urls.find({});
+        res.json(records);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+
+app.get('/api/v1/records/:nr', async (req, res, next) => {
+    const { nr: nr } = req.params;
+    try {
+        const records = await urls.find({});
+        res.json(records[nr]);
+    }
+    catch (error) {
         next(error);
     }
 });
